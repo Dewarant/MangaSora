@@ -16,6 +16,7 @@ def index():
 @app.route('/news')
 def news():
     return render_template("news.html")
+
 @app.route('/uploads/<filename>')
 def send_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)    
@@ -44,7 +45,6 @@ def save_picture(cover):
     return picture_fn
 
 @app.route('/create/', methods=('GET', 'POST'))
-@login_required
 def create():
     form = BookForm()
     if form.validate_on_submit():
@@ -74,7 +74,6 @@ def create():
     return render_template('create.html', form=form)
 
 @app.route('/<int:book_id>/edit/', methods=('GET', 'POST'))
-@login_required
 def edit(book_id):
     book = Book.query.get_or_404(book_id)
     form = UpdateBook()
@@ -112,7 +111,6 @@ def edit(book_id):
     return render_template('edit.html', form=form)      
 
 @app.post('/<int:book_id>/delete/')
-@login_required
 def delete(book_id):
     book = Book.query.get_or_404(book_id)
     db.session.delete(book)
@@ -176,3 +174,7 @@ def redirect_to_singlin(response):
     if response.status_code == 401:
         return redirect(url_for('login_page') + '?next=' + request.url)
     return response
+
+@app.route('/reps')
+def reps():
+    return render_template("exit.html")
